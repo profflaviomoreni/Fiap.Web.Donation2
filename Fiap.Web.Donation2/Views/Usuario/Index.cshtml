@@ -1,0 +1,38 @@
+﻿@model IList<UsuarioModel>
+
+<h1>Usuários</h1>
+
+<p class="toolbar">
+    <a href="/Usuario/Novo" class="create btn btn-dark">Novo usuario</a>
+</p>
+
+<table class="table table-striped" border="1" cellspacing="0" cellpadding="0">
+    <thead>
+        <tr>
+            <th data-field="id">Id</th>
+            <th data-field="name">Nome</th>
+            <th data-field="tipo">Email</th>
+            <th data-field="disponivel">Regra</th>
+            <th class="actions" width="220">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td data-field="id">@item.UsuarioId</td>
+                <td data-field="name">@item.Nome</td>
+                <td data-field="tipo">@item.Email</td>
+                <td data-field="disponivel">@item.Regra</td>
+                <td class="actions" width="220">
+                    <a href="#">Detalhe</a>
+                    <a href="/Usuario/Editar/@item.UsuarioId">Editar</a>
+                    <a href="#">Remover</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

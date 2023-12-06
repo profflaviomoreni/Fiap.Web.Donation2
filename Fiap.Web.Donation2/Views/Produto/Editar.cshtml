@@ -17,6 +17,33 @@
                         <label>Descrição:</label>
                         <input type="text" name="descricao" value="@Model.Descricao" class="form-control w-75" />
                     </div>
+                    <!-- Itens Novos -->
+                    <div class="form-group">
+                        <input type="checkbox" checked="@Model.Disponivel" name="disponivel" class="form-check-input" />
+                        <label class="form-check-label">Disponível</label>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo:</label>
+                        <select name="TipoProdutoId" class="form-control w-75">
+                            <option value="0">Selecione</option>
+                            <option value="1">Celular</option>
+                            <option value="2">Televisor</option>
+                            <option value="1">Eletrodoméstico</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sugestão de troca:</label>
+                        <textarea name="SugestaoTroca" class="form-control w-75">@Model.SugestaoTroca</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor:</label>
+                        <input type="number" name="valor" value="@Model.Valor" class="form-control w-25" />
+                    </div>
+                    <div class="form-group">
+                        <label>Data da Expiração:</label>
+                        <input type="text" name="DataExpiracao" value="@Model.DataExpiracao" class="form-control w-25" />
+                    </div>
+                    <!-- Fim Itens Novos -->
 
                     <hr class="hr" />
                     <input type="submit" value="Enviar" />

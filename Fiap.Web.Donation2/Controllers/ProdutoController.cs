@@ -7,7 +7,9 @@ namespace Fiap.Web.Donation2.Controllers
     {
         public IActionResult Index()
         {
+            // SELECT * FROM 
             var produtos = ListarProdutosMock();
+
             return View(produtos);
         }
 
@@ -28,8 +30,11 @@ namespace Fiap.Web.Donation2.Controllers
             }
             else
             {
-                // INSERT 
-                return View("Sucesso");
+
+                // INSERT
+                TempData["Mensagem"] = $"Produto {produtoModel.Nome} cadastrado com sucesso";
+
+                return RedirectToAction("Index");
             }
         }
 
@@ -60,8 +65,10 @@ namespace Fiap.Web.Donation2.Controllers
                 return View(produtoModel);
             } else
             {
-                // UPDATE 
-                return View("Sucesso");
+                // INSERT
+                TempData["Mensagem"] = $"Produto {produtoModel.Nome} editado com sucesso";
+
+                return RedirectToAction("Index");
             }
             
         }
