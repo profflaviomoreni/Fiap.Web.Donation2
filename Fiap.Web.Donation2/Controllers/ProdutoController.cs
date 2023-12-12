@@ -1,14 +1,24 @@
-﻿using Fiap.Web.Donation2.Models;
+﻿using Fiap.Web.Donation2.Data;
+using Fiap.Web.Donation2.Models;
+using Fiap.Web.Donation2.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fiap.Web.Donation2.Controllers
 {
     public class ProdutoController : Controller
     {
+
+        private readonly ProdutoRepository _produtoRepository;
+
+        public ProdutoController(DataContext dataContext)
+        {
+            _produtoRepository = new ProdutoRepository(dataContext);
+        }
+
+
         public IActionResult Index()
         {
-            // SELECT * FROM 
-            var produtos = ListarProdutosMock();
+            var produtos = _produtoRepository.FindAll();
 
             return View(produtos);
         }
@@ -30,8 +40,9 @@ namespace Fiap.Web.Donation2.Controllers
             }
             else
             {
-
-                // INSERT
+                produtoModel.UsuarioId = 1;
+                _produtoRepository.Insert(produtoModel);
+                
                 TempData["Mensagem"] = $"Produto {produtoModel.Nome} cadastrado com sucesso";
 
                 return RedirectToAction("Index");
