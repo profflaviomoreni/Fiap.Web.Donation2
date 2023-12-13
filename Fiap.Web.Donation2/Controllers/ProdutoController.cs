@@ -2,6 +2,7 @@
 using Fiap.Web.Donation2.Models;
 using Fiap.Web.Donation2.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Fiap.Web.Donation2.Controllers
 {
@@ -28,20 +29,17 @@ namespace Fiap.Web.Donation2.Controllers
         [HttpGet]
         public IActionResult Novo()
         {
-            var listaTipos = _tipoProdutoRepository.FindAll();
-            ViewBag.TipoProdutos = listaTipos;
+            ComboTipoProduto();
 
             return View(new ProdutoModel());
         }
-
 
         [HttpPost]
         public IActionResult Novo(ProdutoModel produtoModel)
         {
             if (string.IsNullOrEmpty(produtoModel.Nome))
             {
-                var listaTipos = _tipoProdutoRepository.FindAll();
-                ViewBag.TipoProdutos = listaTipos;
+                ComboTipoProduto();
 
                 ViewBag.Mensagem = "O campo nome é requerido";
                 return View(produtoModel);
@@ -60,8 +58,7 @@ namespace Fiap.Web.Donation2.Controllers
 
         [HttpGet]
         public IActionResult Editar(int id) {
-            var listaTipos = _tipoProdutoRepository.FindAll();
-            ViewBag.TipoProdutos = listaTipos;
+            ComboTipoProduto();
 
             ProdutoModel produto = _produtoRepository.FindById(id);
             return View(produto);
@@ -73,8 +70,7 @@ namespace Fiap.Web.Donation2.Controllers
         {
             if ( string.IsNullOrEmpty(produtoModel.Nome)  )
             {
-                var listaTipos = _tipoProdutoRepository.FindAll();
-                ViewBag.TipoProdutos = listaTipos;
+                ComboTipoProduto();
 
                 return View(produtoModel);
             } else
@@ -99,6 +95,16 @@ namespace Fiap.Web.Donation2.Controllers
             return RedirectToAction("Index");
         }
 
+
+        private void ComboTipoProduto()
+        {
+            var listaTipos = _tipoProdutoRepository.FindAll();
+                                        
+                                      // Itens  ,   Valor Numerico , Texto  
+            var combo = new SelectList(listaTipos, "TipoProdutoId", "Nome");
+
+            ViewBag.TipoProdutos = combo;
+        }
 
     }
 }

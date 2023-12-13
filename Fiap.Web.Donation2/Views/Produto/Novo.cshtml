@@ -27,12 +27,8 @@
                     </div>
                     <div class="form-group">
                         <label>Tipo:</label>
-                        <select name="TipoProdutoId" class="form-control w-75">
+                        <select asp-for="TipoProdutoId" asp-items="@ViewBag.TipoProdutos" class="form-control w-75">
                             <option value="0">Selecione</option>
-                            @foreach (var tipo in ViewBag.TipoProdutos)
-                            {
-                                <option value="@tipo.TipoProdutoId">@tipo.Nome</option>
-                            }
                         </select>
                     </div>
                     <div class="form-group">
