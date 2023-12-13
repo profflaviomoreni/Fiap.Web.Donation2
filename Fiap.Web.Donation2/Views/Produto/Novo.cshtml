@@ -29,9 +29,10 @@
                         <label>Tipo:</label>
                         <select name="TipoProdutoId" class="form-control w-75">
                             <option value="0">Selecione</option>
-                            <option value="1">Celular</option>
-                            <option value="2">Televisor</option>
-                            <option value="1">Eletrodoméstico</option>
+                            @foreach (var tipo in ViewBag.TipoProdutos)
+                            {
+                                <option value="@tipo.TipoProdutoId">@tipo.Nome</option>
+                            }
                         </select>
                     </div>
                     <div class="form-group">

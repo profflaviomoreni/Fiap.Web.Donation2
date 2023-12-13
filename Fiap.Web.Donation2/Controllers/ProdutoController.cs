@@ -9,10 +9,12 @@ namespace Fiap.Web.Donation2.Controllers
     {
 
         private readonly ProdutoRepository _produtoRepository;
+        private readonly TipoProdutoRepository _tipoProdutoRepository;
 
         public ProdutoController(DataContext dataContext)
         {
             _produtoRepository = new ProdutoRepository(dataContext);
+            _tipoProdutoRepository = new TipoProdutoRepository(dataContext);    
         }
 
 
@@ -26,6 +28,9 @@ namespace Fiap.Web.Donation2.Controllers
         [HttpGet]
         public IActionResult Novo()
         {
+            var listaTipos = _tipoProdutoRepository.FindAll();
+            ViewBag.TipoProdutos = listaTipos;
+
             return View(new ProdutoModel());
         }
 
@@ -35,6 +40,9 @@ namespace Fiap.Web.Donation2.Controllers
         {
             if (string.IsNullOrEmpty(produtoModel.Nome))
             {
+                var listaTipos = _tipoProdutoRepository.FindAll();
+                ViewBag.TipoProdutos = listaTipos;
+
                 ViewBag.Mensagem = "O campo nome é requerido";
                 return View(produtoModel);
             }
@@ -52,18 +60,10 @@ namespace Fiap.Web.Donation2.Controllers
 
         [HttpGet]
         public IActionResult Editar(int id) {
+            var listaTipos = _tipoProdutoRepository.FindAll();
+            ViewBag.TipoProdutos = listaTipos;
 
-            // SELECT * FROM produto WHERE produtoid = id
-            ProdutoModel produto = new ProdutoModel()
-            {
-                ProdutoId = 1,
-                Nome = "Iphone 11",
-                Descricao = "Descricao Descricao",
-                TipoProdutoId = 1,
-                Disponivel = true,
-                DataExpiracao = DateTime.Now,
-            };
-
+            ProdutoModel produto = _produtoRepository.FindById(id);
             return View(produto);
         }
 
@@ -73,10 +73,16 @@ namespace Fiap.Web.Donation2.Controllers
         {
             if ( string.IsNullOrEmpty(produtoModel.Nome)  )
             {
+                var listaTipos = _tipoProdutoRepository.FindAll();
+                ViewBag.TipoProdutos = listaTipos;
+
                 return View(produtoModel);
             } else
             {
-                // INSERT
+                
+                produtoModel.UsuarioId = 1;
+                _produtoRepository.Update(produtoModel);
+
                 TempData["Mensagem"] = $"Produto {produtoModel.Nome} editado com sucesso";
 
                 return RedirectToAction("Index");
@@ -85,49 +91,14 @@ namespace Fiap.Web.Donation2.Controllers
         }
 
 
-
-        // Simulando o acesso ao banco de dados para obter uma lista de produtos
-        private IList<ProdutoModel> ListarProdutosMock()
+        [HttpGet]
+        public IActionResult Excluir(int id)
         {
-            // SELECT * FROM produtos;
-
-            var produtos = new List<ProdutoModel>{
-                new ProdutoModel()
-                {
-                    ProdutoId = 1,
-                    Nome = "Iphone 11",
-                    TipoProdutoId = 1,
-                    Disponivel = true,
-                    DataExpiracao = DateTime.Now,
-                },
-                new ProdutoModel()
-                {
-                    ProdutoId = 2,
-                    Nome = "Iphone 12",
-                    TipoProdutoId = 2,
-                    Disponivel = true,
-                    DataExpiracao = DateTime.Now,
-                },
-                new ProdutoModel()
-                {
-                    ProdutoId = 3,
-                    Nome = "Iphone 13",
-                    TipoProdutoId = 1,
-                    Disponivel = true,
-                    DataExpiracao = DateTime.Now,
-                },
-                new ProdutoModel()
-                {
-                    ProdutoId = 4,
-                    Nome = "Iphone 14",
-                    TipoProdutoId = 1,
-                    Disponivel = false,
-                    DataExpiracao = DateTime.Now,
-                },
-            };
-
-            return produtos;
+            _produtoRepository.Delete(id);
+            TempData["Mensagem"] = $"Produto removido com sucesso";
+            return RedirectToAction("Index");
         }
+
 
     }
 }

@@ -24,7 +24,9 @@ namespace Fiap.Web.Donation2.Repository
 
         public ProdutoModel FindById(int id)
         {
-            return null;
+            // SELECT * FROM Produtos WHERE ProdutoId = {id}
+            var produtoModel = _dataContext.Produtos.FirstOrDefault( p => p.ProdutoId == id );
+            return produtoModel;
         }
 
         public IList<ProdutoModel> FindByNome(string nome)
@@ -53,17 +55,24 @@ namespace Fiap.Web.Donation2.Repository
 
         public void Update( ProdutoModel produtoModel )
         {
-
+            _dataContext.Produtos.Update(produtoModel);
+            _dataContext.SaveChanges();
         }
 
         public void Delete( ProdutoModel produtoModel )
         {
-
+            _dataContext.Produtos.Remove(produtoModel);
+            _dataContext.SaveChanges();
         }
 
         public void Delete(int id)
         {
+            var produtoModel = new ProdutoModel()
+            {
+                ProdutoId = id
+            };
 
+            Delete(produtoModel);
         }
 
 
