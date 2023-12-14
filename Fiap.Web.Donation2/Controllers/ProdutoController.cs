@@ -21,7 +21,10 @@ namespace Fiap.Web.Donation2.Controllers
 
         public IActionResult Index()
         {
-            var produtos = _produtoRepository.FindAll();
+            //var produtos = _produtoRepository.FindAll();
+            //var produtos = _produtoRepository.FindAllWithTipoAndUsuario();
+            //var produtos = _produtoRepository.FindByNome("2");
+            var produtos = _produtoRepository.FindByNomeAndDataExpiracao("i", DateTime.Now );
 
             return View(produtos);
         }

@@ -1,5 +1,6 @@
 ﻿using Fiap.Web.Donation2.Data;
 using Fiap.Web.Donation2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.Web.Donation2.Repository
 {
@@ -22,6 +23,65 @@ namespace Fiap.Web.Donation2.Repository
             return produtos == null ? new List<ProdutoModel>() : produtos ;
         }
 
+
+        public IList<ProdutoModel> FindAllDisponivelTroca(int idUsuario)
+        {
+            var produtos = _dataContext
+                                .Produtos
+                                    .Include(p => p.TipoProduto)
+                                    .Include(p => p.Usuario)
+                                    .Where(
+                                        p => p.UsuarioId != idUsuario && 
+                                        p.Disponivel == true          &&
+                                        p.DataExpiracao >= DateTime.Now
+                                     )
+                                    .ToList();
+
+            return produtos == null ? new List<ProdutoModel>() : produtos;
+        }
+
+
+        public IList<ProdutoModel> FindAllDisponivelUsuarioTroca(int idUsuario)
+        {
+            var produtos = _dataContext
+                                .Produtos
+                                    .Include(p => p.TipoProduto)
+                                    .Include(p => p.Usuario)
+                                    .Where(
+                                        p => p.UsuarioId == idUsuario &&
+                                        p.Disponivel == true &&
+                                        p.DataExpiracao >= DateTime.Now
+                                     )
+                                    .ToList();
+
+            return produtos == null ? new List<ProdutoModel>() : produtos;
+        }
+
+
+
+        public IList<ProdutoModel> FindAllWithTipo()
+        {
+            // SELECT * FROM Produtos
+            var produtos = _dataContext
+                                .Produtos
+                                    .Include( p => p.TipoProduto )
+                                    .ToList();
+
+            return produtos == null ? new List<ProdutoModel>() : produtos;
+        }
+
+        public IList<ProdutoModel> FindAllWithTipoAndUsuario()
+        {
+            var produtos = _dataContext
+                                .Produtos
+                                    .Include(p => p.TipoProduto)
+                                    .Include(p => p.Usuario )
+                                    .ToList();
+
+            return produtos == null ? new List<ProdutoModel>() : produtos;
+        }
+
+
         public ProdutoModel FindById(int id)
         {
             // SELECT * FROM Produtos WHERE ProdutoId = {id}
@@ -31,19 +91,31 @@ namespace Fiap.Web.Donation2.Repository
 
         public IList<ProdutoModel> FindByNome(string nome)
         {
-            return null;
+            var produtos = _dataContext
+                                .Produtos
+                                    .Include(p => p.TipoProduto)
+                                    .Include(p => p.Usuario)
+                                    .Where( p => p.Nome.ToLower().Contains(nome.ToLower()))
+                                    .ToList();
+
+            return produtos == null ? new List<ProdutoModel>() : produtos;
         }
 
         public IList<ProdutoModel> FindByNomeAndDataExpiracao( string nome, DateTime dataExpiracao )
         {
-            return null;
+            var produtos = _dataContext.Produtos
+                                .Include(p => p.TipoProduto)
+                                .Include(p => p.Usuario)
+                                .Where(p => 
+                                    p.Nome.ToLower().Contains(nome.ToLower()) && 
+                                    p.DataExpiracao >= dataExpiracao  
+                                 )
+                                .OrderByDescending(p => p.Nome)
+                                .ToList();
+
+            return produtos == null ? new List<ProdutoModel>() : produtos;
         }
 
-
-        public IList<ProdutoModel> FindByDisponivelAndDataExpiracao(bool disponivel, DateTime dataExp)
-        {
-            return null;
-        }
 
         public int Insert ( ProdutoModel produtoModel )
         {
