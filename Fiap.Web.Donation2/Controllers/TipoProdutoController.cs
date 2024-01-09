@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.Web.Donation2.Controllers
 {
-    public class TipoProdutoController : Controller
+    public class TipoProdutoController : BaseController
     {
         private readonly DataContext _context;
 
-        public TipoProdutoController(DataContext context)
+        public TipoProdutoController(DataContext context, IHttpContextAccessor httpContextAccessor) : base (httpContextAccessor)
         {
             _context = context;
         }
@@ -17,9 +17,17 @@ namespace Fiap.Web.Donation2.Controllers
         // GET: TipoProduto
         public async Task<IActionResult> Index()
         {
-              return _context.TipoProdutos != null ? 
+
+            if( Autenticado ) {
+                return _context.TipoProdutos != null ?
                           View(await _context.TipoProdutos.ToListAsync()) :
                           Problem("Entity set 'DataContext.TipoProdutos'  is null.");
+            } else
+            {
+                return RedirectToAction("Index","Login");
+            }
+
+              
         }
 
         // GET: TipoProduto/Details/5

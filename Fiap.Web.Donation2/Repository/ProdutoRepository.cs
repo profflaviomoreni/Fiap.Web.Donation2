@@ -1,6 +1,7 @@
 ﻿using Fiap.Web.Donation2.Data;
 using Fiap.Web.Donation2.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace Fiap.Web.Donation2.Repository
 {
@@ -146,8 +147,6 @@ namespace Fiap.Web.Donation2.Repository
 
             Delete(produtoModel);
         }
-
-
 
     }
 }

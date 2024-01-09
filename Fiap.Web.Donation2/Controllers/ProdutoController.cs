@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Fiap.Web.Donation2.Controllers
 {
-    public class ProdutoController : Controller
+    public class ProdutoController : BaseController
     {
 
         private readonly ProdutoRepository _produtoRepository;
         private readonly TipoProdutoRepository _tipoProdutoRepository;
 
-        public ProdutoController(DataContext dataContext)
+        public ProdutoController(DataContext dataContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _produtoRepository = new ProdutoRepository(dataContext);
             _tipoProdutoRepository = new TipoProdutoRepository(dataContext);    
@@ -32,9 +32,14 @@ namespace Fiap.Web.Donation2.Controllers
         [HttpGet]
         public IActionResult Novo()
         {
-            ComboTipoProduto();
-
-            return View(new ProdutoModel());
+            if (Autenticado)
+            {
+                ComboTipoProduto();
+                return View(new ProdutoModel());
+            } else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
@@ -49,7 +54,7 @@ namespace Fiap.Web.Donation2.Controllers
             }
             else
             {
-                produtoModel.UsuarioId = 1;
+                produtoModel.UsuarioId = (int) UsuarioId;
                 _produtoRepository.Insert(produtoModel);
                 
                 TempData["Mensagem"] = $"Produto {produtoModel.Nome} cadastrado com sucesso";

@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Fiap.Web.Donation2.Controllers
 {
-    public class TrocaController : Controller
+    public class TrocaController : BaseController
     {
 
         private readonly ProdutoRepository _produtoRepository;
+        private readonly TrocaRepository _trocaRepository;
 
-        private readonly int UsuarioId = 1;
-
-        public TrocaController(DataContext dataContext)
+        public TrocaController(DataContext dataContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
-            _produtoRepository = new ProdutoRepository(dataContext);        
+            _produtoRepository = new ProdutoRepository(dataContext);       
+            _trocaRepository = new TrocaRepository(dataContext);
         }
 
         [HttpGet]
@@ -62,7 +62,9 @@ namespace Fiap.Web.Donation2.Controllers
 
                 trocaModel.Status = TrocaStatus.Iniciado;
 
-                //_trocaRepository.Insert(trocalModel);
+                _trocaRepository.Insert(trocaModel);
+
+                TempData["Erro"] = "Troca efetuada com sucesso";
 
                 return RedirectToAction("Index", "Home");
             } catch (Exception ex)
@@ -81,7 +83,7 @@ namespace Fiap.Web.Donation2.Controllers
 
         private void ComboMeusProduto()
         {
-            var produtos = _produtoRepository.FindAllDisponivelUsuarioTroca(UsuarioId);
+            var produtos = _produtoRepository.FindAllDisponivelUsuarioTroca( (int) UsuarioId );
 
             // Itens  ,   Valor Numerico , Texto  
             var combo = new SelectList(produtos, "ProdutoId", "Nome");

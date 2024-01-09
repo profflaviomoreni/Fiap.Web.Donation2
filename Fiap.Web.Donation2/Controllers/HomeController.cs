@@ -6,15 +6,13 @@ using System.Diagnostics;
 
 namespace Fiap.Web.Donation2.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
-        private readonly int UsuarioId = 1;
-
         private readonly ProdutoRepository _produtoRepository;
 
-        public HomeController(ILogger<HomeController> logger, DataContext dataContext)
+        public HomeController(ILogger<HomeController> logger, DataContext dataContext, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor) 
         {
             _logger = logger;
             _produtoRepository = new ProdutoRepository(dataContext);
@@ -22,7 +20,17 @@ namespace Fiap.Web.Donation2.Controllers
 
         public IActionResult Index()
         {
-            var produtos = _produtoRepository.FindAllDisponivelTroca(UsuarioId);
+            IList<ProdutoModel> produtos = new List<ProdutoModel>();
+
+            if ( Autenticado )
+            {
+                produtos = _produtoRepository.FindAllDisponivelTroca((int)UsuarioId);
+            } else
+            {
+                produtos = _produtoRepository.FindAllWithTipoAndUsuario();
+            }
+
+            
 
             return View(produtos);
         }
